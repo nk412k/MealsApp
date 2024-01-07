@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useSelector } from 'react-redux';
 
 import {
   EmptyListContainer,
@@ -6,23 +6,25 @@ import {
   FavoriteMealList,
   ScreenContainer,
 } from './styledComponents';
-import { FavoriteContext } from '../../stores/context/favoriteContext';
 import { MEALS } from '../../data/dummyData';
 import Meal from '../../stores/models/meal';
 import MealCard from '../../components/MealCard';
+import { State } from '../../stores/types';
 
 const FavoriteMealsScreen = (): React.ReactElement => {
-  const favoriteMealCtx = useContext(FavoriteContext);
+  const favoriteMealIds = useSelector(
+    (state: State) => state.favoriteMeals.favoriteMealIds
+  );
 
   const favoriteMealList = MEALS.filter((meal) =>
-    favoriteMealCtx.favoriteMealIds.includes(meal.id)
+    favoriteMealIds.includes(meal.id)
   );
 
   const renderMealItem = ({ item }: { item: Meal }): React.ReactElement => {
     return <MealCard meal={item} />;
   };
 
-  if (favoriteMealCtx.favoriteMealIds.length === 0) {
+  if (favoriteMealIds.length === 0) {
     return (
       <EmptyListContainer>
         <EmptyListText>

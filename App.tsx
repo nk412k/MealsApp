@@ -2,13 +2,15 @@ import { StatusBar } from 'expo-status-bar';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
+import { Ionicons } from '@expo/vector-icons';
+import { Provider } from 'react-redux';
+
 import MealsDetailsScreen from './src/screens/MealDetailsScreen';
 import MealsListScreen from './src/screens/MealsListScreen';
 import MealsCategoryScreen from './src/screens/MealsCategoryScreen';
 import FavoriteMealsScreen from './src/screens/FavoriteMealsScreen';
 import { Colors } from './src/constants/Colors';
-import FavoriteContextProvider from './src/stores/context/favoriteContext';
-import { Ionicons } from '@expo/vector-icons';
+import { store } from './src/stores/redux/store';
 
 const Drawer = createDrawerNavigator();
 const Stack = createNativeStackNavigator();
@@ -57,7 +59,7 @@ export default function App() {
   return (
     <>
       <StatusBar style='light' />
-      <FavoriteContextProvider>
+      <Provider store={store}>
         <NavigationContainer>
           <Stack.Navigator
             initialRouteName='HomeScreen'
@@ -77,7 +79,7 @@ export default function App() {
             <Stack.Screen name='MealDetails' component={MealsDetailsScreen} />
           </Stack.Navigator>
         </NavigationContainer>
-      </FavoriteContextProvider>
+      </Provider>
     </>
   );
 }

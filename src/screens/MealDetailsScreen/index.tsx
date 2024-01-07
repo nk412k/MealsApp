@@ -1,5 +1,6 @@
-import { useLayoutEffect, useContext } from 'react';
+import { useLayoutEffect } from 'react';
 import { RouteProp } from '@react-navigation/native';
+import { useSelector, useDispatch } from 'react-redux';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -14,7 +15,11 @@ import {
   ScreenContainer,
 } from './styledComponents';
 import MealDetailList from '../../components/MealDetailsList';
-import { FavoriteContext } from '../../stores/context/favoriteContext';
+import { State } from '../../stores/types';
+import {
+  addFavoriteMeal,
+  removeFavoriteMeal,
+} from '../../stores/redux/favorite';
 
 type MealDetailScreenRouteProp = RouteProp<
   { params: { mealId: string } },
@@ -32,7 +37,11 @@ const MealsDetailsScreen = ({
 }): React.ReactElement => {
   const mealId = route.params.mealId;
 
-  const favoriteCtx = useContext(FavoriteContext);
+  const favoriteMealIds = useSelector(
+    (state: State) => state.favoriteMeals.favoriteMealIds
+  );
+
+  const dispatch = useDispatch();
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -41,15 +50,15 @@ const MealsDetailsScreen = ({
   });
 
   const onFavoritePress = () => {
-    if (favoriteCtx.favoriteMealIds.includes(mealId)) {
-      favoriteCtx.removeFavoriteMeal(mealId);
+    if (favoriteMealIds.includes(mealId)) {
+      dispatch(removeFavoriteMeal({ id: mealId }));
     } else {
-      favoriteCtx.addFavoriteMeal(mealId);
+      dispatch(addFavoriteMeal({ id: mealId }));
     }
   };
 
   const renderHeaderIcon = (): React.ReactElement => {
-    const mealIsFavorite = favoriteCtx.favoriteMealIds.includes(mealId);
+    const mealIsFavorite = favoriteMealIds.includes(mealId);
 
     return (
       <Ionicons
